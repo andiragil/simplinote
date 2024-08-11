@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import React from 'react';
-import AddNote from './notes/addNote';
-import DeleteNote from './notes/deleteNote';
-import UpdateNote from './notes/updateNote';
+import AddNote from './addNote';
+import DeleteNote from './deleteNote';
+import UpdateNote from './updateNote';
 import {
   Table,
   Thead,
