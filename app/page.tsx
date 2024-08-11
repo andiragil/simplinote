@@ -3,67 +3,53 @@ import React from 'react';
 import AddNote from './notes/addNote';
 import DeleteNote from './notes/deleteNote';
 import UpdateNote from './notes/updateNote';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from '@chakra-ui/react'
-
-
+import SearchNote from './notes/searchNote';
+import { ChakraProvider, SimpleGrid, Card, CardHeader, Heading, CardBody, Text, CardFooter, Button, Input, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
 
 const prisma = new PrismaClient();
 
-const getNotes = async() => {
-    const response = await prisma.note.findMany({
-        select:{
-            id: true,
-            title: true,
-            body: true,
-        }
-    });
-    return response;
-}
+const getNotes = async () => {
+  const response = await prisma.note.findMany({
+    select: {
+      id: true,
+      title: true,
+      body: true,
+    },
+  });
+  return response;
+};
 
 const Notes = async () => {
-    const notes = await getNotes();
+  const notes = await getNotes();
 
-    return (
-    <div>
-        <h1 className='text-lg'>Your Notes</h1>
-        <div className="mt-4 mb-2">
-            <AddNote/>
+  return (
+    <ChakraProvider>
+      <div className="container mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 my-4 border-b-2 border-teal-500 pb-2">SimpliNote</h1>
+        <p className="text-xl text-gray-600 mb-6 italic">"Stay Organized, Stay Simple"</p>
+        <div className="flex justify-between items-center mt-4 mb-2">
+          <SearchNote />
+          <AddNote />
         </div>
-        <table className='table w-full'>
-            <thead className='text-left'>
-                <tr>
-                    <th>#</th>
-                    <th>title</th>
-                    <th>body</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {notes.map((note, index)=>(
-                <tr key={note.id}>
-                    <td>{index + 1}</td>
-                    <td>{note.title}</td>
-                    <td>{note.body}</td>
-                    <td>
-                        <UpdateNote note={note} />
-                        <DeleteNote note={note} />
-                    </td>
-                </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
-    )
-}
+        <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
+          {notes.map((note) => (
+            <Card key={note.id}>
+              <CardHeader>
+                <Heading size="md">{note.title}</Heading>
+              </CardHeader>
+              <CardBody>
+                <Text>{note.body}</Text>
+              </CardBody>
+              <CardFooter>
+                <UpdateNote note={note} />
+                <DeleteNote note={note} />
+              </CardFooter>
+            </Card>
+          ))}
+        </SimpleGrid>
+      </div>
+    </ChakraProvider>
+  );
+};
 
 export default Notes;
