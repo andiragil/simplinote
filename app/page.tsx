@@ -14,6 +14,7 @@ const getNotes = async () => {
       id: true,
       title: true,
       body: true,
+      created_at: true,
     },
   });
   return response;
@@ -35,12 +36,17 @@ const Notes = async () => {
           {notes.map((note) => (
             <Card key={note.id}>
               <CardHeader>
-                <Heading size="md">{note.title}</Heading>
+                <Heading size="md" className="truncate">
+                  {note.title}
+                </Heading>
+                <Text fontSize="sm" color="gray.500" mt={1}>
+                  Created at {new Date(note.created_at).toLocaleDateString()}
+                </Text>
               </CardHeader>
               <CardBody>
-                <Text>{note.body}</Text>
+                <Text className="overflow-hidden overflow-ellipsis whitespace-nowrap max-h-20">{note.body}</Text>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="flex justify-end space-x-2">
                 <UpdateNote note={note} />
                 <DeleteNote note={note} />
               </CardFooter>
