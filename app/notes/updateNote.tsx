@@ -50,7 +50,10 @@ const UpdateNote = ({ note }: { note: Note }) => {
                 <Textarea placeholder="Input note here" value={body} onChange={(e) => setBody(e.target.value)} />
               </FormControl>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="space-x-2">
+              <Button type="button" colorScheme="gray" variant="solid" onClick={onClose}>
+                Cancel
+              </Button>
               <Button type="submit" colorScheme="teal" variant="solid">
                 Update
               </Button>
