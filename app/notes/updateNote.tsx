@@ -1,8 +1,9 @@
 'use client';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input, Textarea, useDisclosure, ChakraProvider } from '@chakra-ui/react';
+import { Modal, ModalOverlay, IconButton, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input, Textarea, useDisclosure, ChakraProvider } from '@chakra-ui/react';
 import { useState, SyntheticEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { FaEdit } from 'react-icons/fa';
 
 type Note = {
   id: number;
@@ -32,9 +33,7 @@ const UpdateNote = ({ note }: { note: Note }) => {
 
   return (
     <ChakraProvider>
-      <Button colorScheme="teal" variant="solid" onClick={onOpen}>
-        Edit Note
-      </Button>
+      <IconButton aria-label="Edit Note" icon={<FaEdit />} colorScheme="teal" variant="solid" onClick={onOpen} />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -51,7 +50,10 @@ const UpdateNote = ({ note }: { note: Note }) => {
                 <Textarea placeholder="Input note here" value={body} onChange={(e) => setBody(e.target.value)} />
               </FormControl>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="space-x-2">
+              <Button type="button" colorScheme="gray" variant="solid" onClick={onClose}>
+                Cancel
+              </Button>
               <Button type="submit" colorScheme="teal" variant="solid">
                 Update
               </Button>

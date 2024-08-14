@@ -3,7 +3,7 @@ import React from 'react';
 import AddNote from './notes/addNote';
 import DeleteNote from './notes/deleteNote';
 import UpdateNote from './notes/updateNote';
-import { ChakraProvider, SimpleGrid, Card, CardHeader, Heading, CardBody, Text, CardFooter, Button, Input, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
+import { ChakraProvider, SimpleGrid, Card, CardHeader, Heading, CardBody, Text, CardFooter } from '@chakra-ui/react';
 
 const prisma = new PrismaClient();
 
@@ -45,7 +45,7 @@ const Notes = async () => {
               <CardBody>
                 <Text>{note.body}</Text>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="flex justify-end space-x-2">
                 <UpdateNote note={note} />
                 <DeleteNote note={note} />
               </CardFooter>
