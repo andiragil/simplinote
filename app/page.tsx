@@ -15,6 +15,7 @@ const getNotes = async () => {
       id: true,
       title: true,
       body: true,
+      created_at: true,
     },
     orderBy: {
       created_at: 'desc',
@@ -59,6 +60,9 @@ const Notes = async () => {
               <Box key={note.id} p={5} shadow="md" borderWidth="1px" borderRadius="md">
                 <Heading fontSize="xl">{note.title}</Heading>
                 <Text mt={4}>{note.body}</Text>
+                <Text mt={2} color="gray.500" fontSize="sm">
+                  Dibuat pada: {new Date(note.created_at).toLocaleDateString()}
+                </Text>
                 <Box mt={4} className="flex justify-end space-x-2">
                   <UpdateNote note={note} />
                   <DeleteNote note={note} />
