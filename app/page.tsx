@@ -5,6 +5,8 @@ import DeleteNote from './notes/deleteNote';
 import UpdateNote from './notes/updateNote';
 import { ChakraProvider, SimpleGrid, Box, Text, Heading } from '@chakra-ui/react';
 
+export const dynamic = 'force-dynamic';
+
 const prisma = new PrismaClient();
 
 const getNotes = async () => {
