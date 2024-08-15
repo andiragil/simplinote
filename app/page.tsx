@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AddNote from './notes/addNote';
 import DeleteNote from './notes/deleteNote';
 import UpdateNote from './notes/updateNote';
@@ -8,17 +8,22 @@ import { ChakraProvider, SimpleGrid, Box, Text, Heading } from '@chakra-ui/react
 const prisma = new PrismaClient();
 
 const getNotes = async () => {
-  const response = await prisma.note.findMany({
-    select: {
-      id: true,
-      title: true,
-      body: true,
-    },
-    orderBy: {
-      created_at: 'desc',
-    },
-  });
-  return response;
+  try {
+    const response = await prisma.note.findMany({
+      select: {
+        id: true,
+        title: true,
+        body: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error('Error fetching notes:', error);
+    return [];
+  }
 };
 
 const Notes = async () => {
