@@ -3,7 +3,7 @@ import React from 'react';
 import AddNote from './notes/addNote';
 import DeleteNote from './notes/deleteNote';
 import UpdateNote from './notes/updateNote';
-import { ChakraProvider, SimpleGrid, Card, CardHeader, Heading, CardBody, Text, CardFooter } from '@chakra-ui/react';
+import { ChakraProvider, SimpleGrid, Box, Text, Heading } from '@chakra-ui/react';
 
 const prisma = new PrismaClient();
 
@@ -36,22 +36,35 @@ const Notes = async () => {
             <AddNote />
           </div>
         </div>
-        <SimpleGrid spacing={4} className="mx-5" templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}>
-          {notes.map((note) => (
-            <Card key={note.id}>
-              <CardHeader>
-                <Heading size="md">{note.title}</Heading>
-              </CardHeader>
-              <CardBody>
-                <Text>{note.body}</Text>
-              </CardBody>
-              <CardFooter className="flex justify-end space-x-2">
-                <UpdateNote note={note} />
-                <DeleteNote note={note} />
-              </CardFooter>
-            </Card>
-          ))}
-        </SimpleGrid>
+
+        {notes.length === 0 ? (
+          <Box textAlign="center" mt={10} p={8} border="2px dashed" borderColor="gray.300" borderRadius="md" backgroundColor="gray.50" maxW="lg" mx="auto">
+            <Box width="100px" height="100px" backgroundColor="gray.200" borderRadius="full" display="flex" alignItems="center" justifyContent="center" mx="auto" mb={4}>
+              <Text fontSize="4xl" color="gray.500">
+                📄
+              </Text>
+            </Box>
+            <Heading fontSize="2xl" color="gray.600" fontWeight="bold">
+              No notes available
+            </Heading>
+            <Text fontSize="md" color="gray.500" mt={2}>
+              Add your first note by clicking the button above.
+            </Text>
+          </Box>
+        ) : (
+          <SimpleGrid spacing={4} className="mx-5" templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }}>
+            {notes.map((note) => (
+              <Box key={note.id} p={5} shadow="md" borderWidth="1px" borderRadius="md">
+                <Heading fontSize="xl">{note.title}</Heading>
+                <Text mt={4}>{note.body}</Text>
+                <Box mt={4} className="flex justify-end space-x-2">
+                  <UpdateNote note={note} />
+                  <DeleteNote note={note} />
+                </Box>
+              </Box>
+            ))}
+          </SimpleGrid>
+        )}
       </div>
     </ChakraProvider>
   );
