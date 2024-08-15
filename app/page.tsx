@@ -8,22 +8,17 @@ import { ChakraProvider, SimpleGrid, Box, Text, Heading } from '@chakra-ui/react
 const prisma = new PrismaClient();
 
 const getNotes = async () => {
-  try {
-    const response = await prisma.note.findMany({
-      select: {
-        id: true,
-        title: true,
-        body: true,
-      },
-      orderBy: {
-        created_at: 'desc',
-      },
-    });
-    return response;
-  } catch (error) {
-    console.error('Error fetching notes:', error);
-    return [];
-  }
+  const response = await prisma.note.findMany({
+    select: {
+      id: true,
+      title: true,
+      body: true,
+    },
+    orderBy: {
+      created_at: 'desc',
+    },
+  });
+  return response;
 };
 
 const Notes = async () => {
