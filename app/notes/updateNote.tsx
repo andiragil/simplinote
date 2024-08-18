@@ -1,6 +1,6 @@
 'use client';
-import { Modal, ModalOverlay, IconButton, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input, Textarea, useDisclosure, ChakraProvider } from '@chakra-ui/react';
-import { useState, SyntheticEvent } from 'react';
+import { Modal, ModalOverlay, IconButton, ModalContent, ModalHeader, ModalFooter, ModalBody, Spinner, ModalCloseButton, Button, FormControl, FormLabel, Input, Textarea, useDisclosure, ChakraProvider } from '@chakra-ui/react';
+import React, { useState, SyntheticEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { FaEdit } from 'react-icons/fa';
@@ -16,9 +16,11 @@ const UpdateNote = ({ note }: { note: Note }) => {
   const [title, setTitle] = useState(note.title);
   const [body, setBody] = useState(note.body);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleUpdate = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.patch(`/api/notes/${note.id}`, {
         title,
@@ -28,6 +30,8 @@ const UpdateNote = ({ note }: { note: Note }) => {
       onClose();
     } catch (error) {
       console.error('Failed to update the note:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,14 +45,20 @@ const UpdateNote = ({ note }: { note: Note }) => {
           <ModalCloseButton />
           <form onSubmit={handleUpdate}>
             <ModalBody>
-              <FormControl>
-                <FormLabel>Title</FormLabel>
-                <Input type="text" placeholder="Input title here" value={title} onChange={(e) => setTitle(e.target.value)} />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Note content</FormLabel>
-                <Textarea placeholder="Input note here" value={body} onChange={(e) => setBody(e.target.value)} />
-              </FormControl>
+              {loading ? (
+                <Spinner size="xl" />
+              ) : (
+                <>
+                  <FormControl>
+                    <FormLabel>Title</FormLabel>
+                    <Input type="text" placeholder="Input title here" value={title} onChange={(e) => setTitle(e.target.value)} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Note content</FormLabel>
+                    <Textarea placeholder="Input note here" value={body} onChange={(e) => setBody(e.target.value)} />
+                  </FormControl>
+                </>
+              )}
             </ModalBody>
             <ModalFooter className="space-x-2">
               <Button type="button" colorScheme="gray" variant="solid" onClick={onClose}>

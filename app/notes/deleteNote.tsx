@@ -1,5 +1,6 @@
 'use client';
-import { Modal, ModalOverlay, IconButton, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, useDisclosure, ChakraProvider } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Modal, ModalOverlay, Text, IconButton, Spinner, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, useDisclosure, ChakraProvider } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { FaTrash } from 'react-icons/fa';
@@ -13,6 +14,7 @@ type Note = {
 const DeleteNote = ({ note }: { note: Note }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -21,6 +23,8 @@ const DeleteNote = ({ note }: { note: Note }) => {
       onClose();
     } catch (error) {
       console.error('Failed to delete the note:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,9 +36,7 @@ const DeleteNote = ({ note }: { note: Note }) => {
         <ModalContent>
           <ModalHeader>Delete Notes</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <p>Do you want to delete {note.title}?</p>
-          </ModalBody>
+          <ModalBody>{loading ? <Spinner size="xl" /> : <Text>Are you sure you want to delete this note?</Text>}</ModalBody>
           <ModalFooter className="space-x-2">
             <Button type="button" colorScheme="gray" variant="solid" onClick={onClose}>
               Cancel

@@ -1,6 +1,6 @@
 'use client';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input, Textarea, useDisclosure, ChakraProvider } from '@chakra-ui/react';
-import { useState, SyntheticEvent } from 'react';
+import { Modal, Spinner, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input, Textarea, useDisclosure, ChakraProvider } from '@chakra-ui/react';
+import React, { useState, useEffect, SyntheticEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -8,19 +8,26 @@ const AddNote = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await axios.post('/api/notes', {
-      title: title,
-      body: body,
-    });
-    setTitle('');
-    setBody('');
-    router.refresh();
-    onClose();
+    setLoading(true);
+    try {
+      await axios.post('/api/notes', {
+        title: title,
+        body: body,
+      });
+      setTitle('');
+      setBody('');
+      router.refresh();
+      onClose();
+    } catch (error) {
+      console.error('Failed to add the note:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,16 +42,25 @@ const AddNote = () => {
           <ModalCloseButton />
           <form onSubmit={handleSubmit}>
             <ModalBody>
-              <FormControl>
-                <FormLabel>Title</FormLabel>
-                <Input type="text" className="input input-bordered w-full" placeholder="Input title here" value={title} onChange={(e) => setTitle(e.target.value)} />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Note content</FormLabel>
-                <Textarea className="input input-bordered w-full" placeholder="Input note here" value={body} onChange={(e) => setBody(e.target.value)} />
-              </FormControl>
+              {loading ? (
+                <Spinner size="xl" />
+              ) : (
+                <>
+                  <FormControl>
+                    <FormLabel>Title</FormLabel>
+                    <Input type="text" className="input input-bordered w-full" placeholder="Input title here" value={title} onChange={(e) => setTitle(e.target.value)} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Note content</FormLabel>
+                    <Textarea className="input input-bordered w-full" placeholder="Input note here" value={body} onChange={(e) => setBody(e.target.value)} />
+                  </FormControl>
+                </>
+              )}
             </ModalBody>
             <ModalFooter>
+              <Button colorScheme="gray" variant="solid" onClick={onClose} mr={3}>
+                Cancel
+              </Button>
               <Button type="submit" colorScheme="teal" variant="solid">
                 Add
               </Button>
