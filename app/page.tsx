@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import AddNote from './notes/addNote';
 import DeleteNote from './notes/deleteNote';
 import UpdateNote from './notes/updateNote';
-import { ChakraProvider, SimpleGrid, Box, Text, Heading } from '@chakra-ui/react';
+import ViewNote from './notes/viewNote';
+import { ChakraProvider, SimpleGrid, Box, Text, Heading, Button } from '@chakra-ui/react';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +27,13 @@ const getNotes = async () => {
 
 const Notes = async () => {
   const notes = await getNotes();
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  };
 
   return (
     <ChakraProvider>
@@ -59,11 +67,12 @@ const Notes = async () => {
             {notes.map((note) => (
               <Box key={note.id} p={5} shadow="md" borderWidth="1px" borderRadius="md">
                 <Heading fontSize="xl">{note.title}</Heading>
-                <Text mt={4}>{note.body}</Text>
+                <Text mt={4}>{truncateText(note.body, 100)}</Text>
                 <Text mt={2} color="gray.500" fontSize="sm">
                   Dibuat pada: {new Date(note.created_at).toLocaleDateString()}
                 </Text>
                 <Box mt={4} className="flex justify-end space-x-2">
+                  <ViewNote note={note} />
                   <UpdateNote note={note} />
                   <DeleteNote note={note} />
                 </Box>
